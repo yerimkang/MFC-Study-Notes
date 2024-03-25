@@ -28,9 +28,11 @@ void CExamMFCDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 }
 
-BEGIN_MESSAGE_MAP(CExamMFCDlg, CDialogEx)
+BEGIN_MESSAGE_MAP(CExamMFCDlg, CDialogEx) //어려운거
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_WM_LBUTTONDOWN() //추가
+	ON_BN_CLICKED(IDC_BUTTON, &CExamMFCDlg::OnBnClickedButton)
 END_MESSAGE_MAP()
 
 
@@ -86,3 +88,60 @@ HCURSOR CExamMFCDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+/*
+LRESULT CExamMFCDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	//왼쪽 마우스를 누르면 사각형을 만들고 싶다
+	if (message == WM_LBUTTONDOWN) {
+		CClientDC dc(this);  //클라이언트 영역
+
+		int x = LOWORD(lParam); // 하위 16비트 값 분리
+		int y = HIWORD(lParam); // 상위 16비트 값 분리
+
+
+		//컨트롤키 누르고 우클릭 -> wParam / lparam이 더 어렵다.
+		if (wParam & MK_CONTROL) dc.Ellipse(x - 30, y - 30, x + 30, y + 30);
+		else dc.Rectangle(x - 30, y - 30, x + 30, y + 30);
+
+		
+		//Win32
+		HDC h_dc = ::GetDC(m_hWnd);
+		Rectangle(h_dc, 10, 10, 100, 100);
+		::ReleaseDC(m_hWnd, h_dc);
+
+		//MFC기본코드!
+		//CDC *p_dc = GetDC();//CDC = MFC를 총괄하는 제일 상위단 클래스
+		//p_dc->Rectangle(10, 10, 100, 100); //핸들이 안넘어간다.
+		//ReleaseDC(p_dc);
+	}
+
+	return CDialogEx::WindowProc(message, wParam, lParam);
+}
+*/
+
+
+void CExamMFCDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	//point.x, point.y
+	CClientDC dc(this);  //클라이언트 영역
+	
+	//컨트롤키 누르고 우클릭 -> wParam / lparam이 더 어렵다.
+	if (nFlags & MK_CONTROL) dc.Ellipse(point.x - 30, point.y - 30, point.x + 30, point.y + 30);
+	else dc.Rectangle(point.x - 30, point.y - 30, point.x + 30, point.y + 30);
+	
+	CDialogEx::OnLButtonDown(nFlags, point);
+}
+
+
+void CExamMFCDlg::OnBnClickedButton()
+{
+	// 문자를 읽어와야함 -> wchar_t str[64]; / CString str; 을 사용하게 되면 숫자를 적지 않아도 된다.
+	CString str, show_str;
+
+	GetDlgItemText(IDC_INPUT_MSG_EDIT, str); //대화상자 : Dlg 
+	show_str.Format(L"사용자가 입력한 문자열 : %s", str);
+	//show_str = L"사용자가 입력한 문자열 : " + str;
+
+	AfxMessageBox(show_str);
+}
