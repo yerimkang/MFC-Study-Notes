@@ -1,0 +1,5 @@
+﻿  ExamEditDlg.cpp
+C:\codes\MFC-Study-Notes\ExamEdit\ExamEditDlg.cpp(102,10): warning C4244: '초기화 중': 'LRESULT'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/ExamEditDlg.cpp'을(를) 컴파일하는 중)
+  
+  ExamEdit.vcxproj -> C:\codes\MFC-Study-Notes\ExamEdit\x64\Debug\ExamEdit.exe
